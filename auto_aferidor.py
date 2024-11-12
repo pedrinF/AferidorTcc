@@ -43,8 +43,6 @@ def calcular_media_erros(entries_list, media_label):
         media_label.config(text="0.00")
 
 def adicionar_nova_linha(parent_frame, entries_list, lado, massa_especifica_entry, media_label):
-    entry_numero_dispenser = criar_entry(parent_frame, 10)
-    entry_numero_dispenser.grid(row=len(entries_list) + 1, column=0, padx=5, pady=5)
     
     entry_master_padrao_kg = criar_entry(parent_frame, 15)
     entry_master_padrao_kg.grid(row=len(entries_list) + 1, column=1, padx=5, pady=5)
@@ -63,16 +61,16 @@ def adicionar_nova_linha(parent_frame, entries_list, lado, massa_especifica_entr
                              font=fonte_extra_bold, bg="#004AAD", fg="white")
     btn_calcular.grid(row=len(entries_list) + 1, column=5, padx=5, pady=5)
     
-    entries_list.append((entry_numero_dispenser, entry_master_padrao_kg, entry_master_padrao_m3, entry_display_dispenser, entry_erro_percent, btn_calcular))
+    entries_list.append((entry_master_padrao_kg, entry_master_padrao_m3, entry_display_dispenser, entry_erro_percent, btn_calcular))
 
 def criar_secao_lado(titulo, inicio_y, lado, main_frame):
     # Título da seção e campo de entrada para "Número Dispenser"
     label_titulo = tk.Label(main_frame, text=titulo, bg="#004AAD", fg="white", font=fonte_extra_bold)
     label_titulo.grid(row=inicio_y, column=2, sticky="w", padx=10)
     
-    entry_numero_dispenser = tk.Entry(main_frame, bd=0, font=fonte_extra_bold, width=10)
+    entry_numero_dispenser = tk.Entry(main_frame, bd=0, font=fonte_extra_bold, width=20)
     entry_numero_dispenser.grid(row=inicio_y, column=3, sticky="w", padx=10)
-    entry_numero_dispenser.insert(0, f"Número {lado}")  # Placeholder para identificar o lado
+    entry_numero_dispenser.insert(0, f"Número Dispenser {lado}")  # Placeholder para identificar o lado
 
     # Frame para as entradas da seção
     frame_lado = tk.Frame(main_frame, bg="#004AAD")
@@ -82,7 +80,7 @@ def criar_secao_lado(titulo, inicio_y, lado, main_frame):
     labels = ["Master kg", "Master m³", "Dispenser m³", "Erro %"]
     for i, text in enumerate(labels):
         label = tk.Label(frame_lado, text=text, bg="#004AAD", fg="white", font=fonte_extra_bold)
-        label.grid(row=0, column=i, padx=5, pady=5)
+        label.grid(row=0, column=i+1, padx=5, pady=5)
 
     # Lista para armazenar entradas e campo de média de erro
     entries_list = []
