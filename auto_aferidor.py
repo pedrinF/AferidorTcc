@@ -390,7 +390,7 @@ class TelaInicial(tk.Frame):
         self.configure(bg="#004AAD")
 
         # Título
-        label = tk.Label(self, text="Bem-vindo ao Sistema de Aferição", bg="#004AAD", fg="white", font=("Arial", 18, "bold"))
+        label = tk.Label(self, text="METRONGAS V.1", bg="#004AAD", fg="white", font=("Arial", 18, "bold"))
         label.pack(pady=10)
 
         # Botão "Nova Aferição"
@@ -527,15 +527,11 @@ class TelaHistorico(tk.Frame):
         style.configure("Treeview", font=fonte_extra_bold)
 
         # Carregar os dados do histórico
-        historico = self.carregar_historico_ordenado()
-
-        # Adicionar os dados no Treeview
-        for row in historico:
-            self.tree.insert("", "end", values=row[1:6], tags=(row[0],))  # IDs como tags
+        self.carregar_historico_ordenado()
 
         # Adicionar botão de download ao lado de cada item
         self.tree.bind("<Double-1>", self.baixar_pdf)
-        
+
         # Criação de uma frame para os botões
         button_frame = tk.Frame(frame, bg="#004AAD")
         button_frame.pack(pady=20)
@@ -547,10 +543,26 @@ class TelaHistorico(tk.Frame):
         self.btn_voltar = tk.Button(button_frame, text="Voltar", command=lambda: controller.show_frame(TelaInicial), bg="white", fg="blue", font=fonte_extra_bold)
         self.btn_voltar.pack(side="left", padx=10)
 
+        # Botão de Atualizar
+        self.btn_atualizar = tk.Button(button_frame, text="Atualizar", command=self.atualizar_dados, bg="green", fg="white", font=fonte_extra_bold)
+        self.btn_atualizar.pack(side="left", padx=10)
+
     def carregar_historico_ordenado(self):
         """Consulta o banco e retorna o histórico ordenado por data/hora."""
         c.execute("SELECT id, data_hora, empresa, cnpj, endereco, cidade FROM afericoes ORDER BY data_hora DESC")
-        return c.fetchall()
+        historico = c.fetchall()
+
+        # Limpar o Treeview antes de adicionar novos dados
+        for row in self.tree.get_children():
+            self.tree.delete(row)
+
+        # Adicionar os dados no Treeview
+        for row in historico:
+            self.tree.insert("", "end", values=row[1:6], tags=(row[0],))  # IDs como tags
+
+    def atualizar_dados(self):
+        """Função chamada pelo botão 'Atualizar' para recarregar os dados do banco."""
+        self.carregar_historico_ordenado()
 
     def baixar_pdf(self, event=None):
         """Baixar PDF correspondente ao item selecionado."""
@@ -579,7 +591,6 @@ class TelaHistorico(tk.Frame):
                 # Gerar o PDF com os dados
                 gerar_pdf_afericao(dados_dict, lado_a_dados, lado_b_dados, file_path)
                 messagebox.showinfo("Sucesso", f"PDF salvo em {file_path}")
-
 if __name__ == "__main__":
     app = App()
     app.mainloop()
